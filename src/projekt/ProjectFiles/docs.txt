@@ -1,0 +1,5 @@
+09.12.2022 - implemented basic 3d cube and started to change projection Matrix
+             in order to support multiple screen sizes.
+
+10.12.2022 - finished change of projection Matrix and started to implement screen resizing
+
