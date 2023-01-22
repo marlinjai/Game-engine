@@ -3,28 +3,28 @@ package projekt.VectorsAndMatrices;
 import java.util.Objects;
 
 public class Vec3f {
-    private float x;
+    private float getX;
     private float y;
     private float z;
 
     public Vec3f(float x, float y, float z) {
-        this.x = x;
+        this.getX = x;
         this.y = y;
         this.z = z;
     }
 
     public Vec3f() {
-        this.x = 0;
+        this.getX = 0;
         this.y = 0;
         this.z = 0;
     }
 
     public float getX() {
-        return x;
+        return getX;
     }
 
     public void setX(float x) {
-        this.x = x;
+        this.getX = x;
     }
 
     public float getY() {
@@ -63,13 +63,13 @@ public class Vec3f {
 
     public float length() {
         float ret;
-        ret = (float) Math.sqrt((Math.pow(this.x,2) + Math.pow(this.y,2) + Math.pow(this.z,2)));
+        ret = (float) Math.sqrt((Math.pow(this.getX,2) + Math.pow(this.y,2) + Math.pow(this.z,2)));
         return ret;
     }
 
     public float length(Vec3f calcLength) {
         float ret;
-        ret = (float) Math.sqrt((double) (calcLength.x + calcLength.y + calcLength.z));
+        ret = (float) Math.sqrt((double) (calcLength.getX + calcLength.y + calcLength.z));
         return ret;
     }
 
@@ -106,7 +106,7 @@ public class Vec3f {
         ret.setX((this.getY() * second.getZ()) - (this.getZ() * second.getY()));
         ret.setY((this.getZ() * second.getX()) - (this.getX() * second.getZ()));
         ret.setZ((this.getX() * second.getY()) - (this.getY() * second.getX()));
-        if (ret.x == -0) { ret.setX(0);}
+        if (ret.getX == -0) { ret.setX(0);}
         if (ret.y == -0) { ret.setY(0);}
         if (ret.z == -0) { ret.setZ(0);}
 
@@ -125,7 +125,17 @@ public class Vec3f {
         return Objects.hash(getX(), getY(), getZ());
     }
 
-    ;
+    public void Rotate(float angle, Vec3f v) {
+        Quaternion rotationQ = new Quaternion(angle,v);
+        Quaternion conjugateQ = rotationQ.conjugate();
+        Quaternion w = conjugateQ.multiply(rotationQ.multiply(rotationQ,this),conjugateQ);
+
+        this.setX(w.getX());
+        this.setY(w.getY());
+        this.setZ(w.getZ());
+    }
+
+
 
 
 }

@@ -35,8 +35,8 @@ public class VertexArrayObject {
         this.mesh = mesh;
         this.modelMatrix = mesh.getModelMatrix();
         this.texture = texture;
-        glBindTexture(GL_TEXTURE_2D,texture.getId());
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+        glBindTexture(GL_TEXTURE_2D, texture.getId());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         loc = glGenVertexArrays();
         glBindVertexArray(this.loc);
         this.vbo();
@@ -51,7 +51,7 @@ public class VertexArrayObject {
 
     public void vbo() {
 
-        if(this.mesh.getType() == Mesh.type.MODEL) {
+        if (this.mesh.getType() == Mesh.type.MODEL) {
 
             int vboCoords = glGenBuffers();
             glBindBuffer(GL_ARRAY_BUFFER, vboCoords);
@@ -63,11 +63,11 @@ public class VertexArrayObject {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.mesh.getM().indicesArray, GL_STATIC_DRAW);
 
-            if(this.mesh.getM().textureArray != null) {
+            if (this.mesh.getM().textureArray != null) {
                 int vboUV = glGenBuffers();
-                glBindBuffer(GL_ARRAY_BUFFER,vboUV);
+                glBindBuffer(GL_ARRAY_BUFFER, vboUV);
                 glBufferData(GL_ARRAY_BUFFER, this.mesh.getM().textureArray, GL_STATIC_DRAW);
-                glVertexAttribPointer(3,2,GL_FLOAT,false,0,0);
+                glVertexAttribPointer(3, 2, GL_FLOAT, false, 0, 0);
                 glEnableVertexAttribArray(3);
             }
             int vboNormals = glGenBuffers();
@@ -76,8 +76,7 @@ public class VertexArrayObject {
             glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
             glEnableVertexAttribArray(2);
 
-        }
-        else {
+        } else {
             int vboCoords = glGenBuffers();
             glBindBuffer(GL_ARRAY_BUFFER, vboCoords);
             glBufferData(GL_ARRAY_BUFFER, this.mesh.vec3fArrToFloatArr(this.mesh.getVertices()), GL_STATIC_DRAW);
@@ -109,9 +108,6 @@ public class VertexArrayObject {
         glBufferData(GL_ARRAY_BUFFER, this.mesh.vec4fArrToFloatArr(this.mesh.getColours()), GL_STATIC_DRAW);
         glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(1);
-
-
-
 
 
     }

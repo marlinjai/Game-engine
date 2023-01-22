@@ -306,11 +306,14 @@ public class Matrix4 {
 
 
     public Matrix4 initCameraTransform(Vec3f pos, Vec3f lookAt, Vec3f up) {
+
         Vec3f n = lookAt.normalize();
-        Vec3f u = (up.cross(n)).normalize();
-        Vec3f v = n.cross(u).normalize();
-        Matrix4 ret = new Matrix4(u.getX(),v.getX(),n.getX(),0.0f,u.getY(),v.getY(),n.getY(),0.0f,u.getZ(),v.getZ(),n.getZ(),0.0f,-pos.getX(),-pos.getY(), -pos.getZ(),1.0f);
-        return ret;
+        Vec3f vup = (up.cross(n)).normalize();
+        Vec3f v = n.cross(vup).normalize();
+        Matrix4 rotatetrans = new Matrix4(vup.getX(),v.getX(),n.getX(),0.0f,vup.getY(),v.getY(),n.getY(),0.0f,vup.getZ(),v.getZ(),n.getZ(),0.0f,0,0, 0,1.0f);
+        Matrix4 ret = new Matrix4();
+        ret = ret.translate(-pos.getX(), -pos.getY(), -pos.getZ());
+        return rotatetrans.multiply(ret);
     }
 
 

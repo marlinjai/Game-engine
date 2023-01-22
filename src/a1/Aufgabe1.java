@@ -28,7 +28,7 @@ public class Aufgabe1 extends AbstractOpenGLBase {
 	}
 
 	@Override
-	public void update() {
+	public void update(long window) {
 		float angle = (float) ((Math.sin(System.currentTimeMillis()*20)+1)/2);
 		System.out.println(angle);
 		int myValueLoc = glGetUniformLocation(id,"time");

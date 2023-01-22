@@ -7,10 +7,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import projekt.Inputs.MouseInput;
 
 import java.nio.IntBuffer;
 
@@ -21,7 +23,7 @@ public abstract class AbstractOpenGLBase {
 
     protected abstract void init();
 
-    protected abstract void update();
+    protected abstract void update(long window);
 
     protected abstract void render();
 
@@ -46,7 +48,7 @@ public abstract class AbstractOpenGLBase {
         init(); // custom user initialization
 
         while (!glfwWindowShouldClose(window)) {
-            update(); // update internal
+            update(window); // update internal
             IntBuffer w = BufferUtils.createIntBuffer(1);
             IntBuffer h = BufferUtils.createIntBuffer(1);
             glfwGetWindowSize(window, w, h);
@@ -73,6 +75,10 @@ public abstract class AbstractOpenGLBase {
 
     protected abstract void ProcessInput(long window);
 
+
+    public long getWindow() {
+        return window;
+    }
 
     private long openWindow(String title, int width, int height) {
         GLFWErrorCallback.createPrint(System.err).set(); // print errors to systemErr
