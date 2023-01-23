@@ -7,7 +7,7 @@ import projekt.VectorsAndMatrices.Vec3f;
 
 public class Camera {
 
-    public int MARGIN = 10;
+    public int MARGIN = 15;
     public float edgeStep = 1f;
 
     public Vec3f cameraPosv3 = new Vec3f(0f, 0f, 0f);
@@ -109,7 +109,7 @@ public class Camera {
             }
         }
 
-        this.angleV = (float) -Math.toDegrees(Math.asin(this.nLookAt.getY()));
+        this.angleV = (float) ((float) -1.0f*Math.toDegrees(Math.asin(this.nLookAt.getY())));
 
         onUpperEdge = false;
         onLowerEdge = false;
@@ -201,6 +201,10 @@ public class Camera {
         this.vUp = this.nLookAt.cross(U).normalize();
     }
 
+    public void updateWindow(int w, int h){
+        this.windowHeight = h;
+        this.windowWidth = w;
+    }
     public Matrix4 getView() {
         return view;
     }

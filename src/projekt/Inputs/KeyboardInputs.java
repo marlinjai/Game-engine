@@ -47,17 +47,17 @@ public class KeyboardInputs {
         if (glfwGetKey((window), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
         }
-        if (glfwGetKey((window), GLFW_KEY_RIGHT) == GLFW_PRESS) {
-            Vec3f rightMove = p.currentCamera.getnLookAt().cross(p.currentCamera.getvUp());
-            Vec3f rightMoveNorm = rightMove.normalize();
-            rightMoveNorm = rightMoveNorm.scalarMultiply(p.currentCamera.getCameraSpeed());
-            p.currentCamera.cameraPosv3 = p.currentCamera.cameraPosv3.add(rightMoveNorm);
-        }
         if (glfwGetKey((window), GLFW_KEY_LEFT) == GLFW_PRESS) {
-            Vec3f leftMove = p.currentCamera.getvUp().cross(p.currentCamera.getnLookAt());
+            Vec3f leftMove = p.currentCamera.getnLookAt().cross(p.currentCamera.getvUp());
             Vec3f leftMoveNorm = leftMove.normalize();
             leftMoveNorm = leftMoveNorm.scalarMultiply(p.currentCamera.getCameraSpeed());
             p.currentCamera.cameraPosv3 = p.currentCamera.cameraPosv3.add(leftMoveNorm);
+        }
+        if (glfwGetKey((window), GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            Vec3f rightMove = p.currentCamera.getvUp().cross(p.currentCamera.getnLookAt());
+            Vec3f rightMoveNorm = rightMove.normalize();
+            rightMoveNorm = rightMoveNorm.scalarMultiply(p.currentCamera.getCameraSpeed());
+            p.currentCamera.cameraPosv3 = p.currentCamera.cameraPosv3.add(rightMoveNorm);
         }
 
         if (glfwGetKey((window), GLFW_KEY_DOWN) == GLFW_PRESS) {

@@ -1,6 +1,5 @@
 package projekt.ProjectFiles;
 
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.opengl.ARBVertexArrayObject.glBindVertexArray;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -11,7 +10,6 @@ import lenz.opengl.ShaderProgram;
 
 
 import lenz.opengl.Texture;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
 import projekt.Geometry.Mesh;
 import projekt.Inputs.KeyboardInputs;
 import projekt.Inputs.MouseInput;
@@ -24,7 +22,11 @@ import java.util.*;
 
 public class Projekt extends AbstractOpenGLBase {
 
-    private ShaderProgram shaderProgram;
+    private ShaderProgram shaderProgramI;
+    private ShaderProgram shaderProgramII;
+
+    public boolean isShaderProgramI;
+    public boolean isShaderProgramII;
 
 
     private KeyboardInputs projectKeyboardInputs = new KeyboardInputs();
@@ -34,7 +36,7 @@ public class Projekt extends AbstractOpenGLBase {
     public Vec3f cameraPosv3 = new Vec3f(0f, 0f, 0f);
     private Vec3f vUp = new Vec3f(0.0f, 1.0f, 0.0f);
     private Vec3f nLookAt = new Vec3f(0.0f, 0.0f, 1.0f);
-    public Camera currentCamera = new Camera(cameraPosv3,vUp,nLookAt,this.width,this.height);
+    public Camera currentCamera = new Camera(cameraPosv3, vUp, nLookAt, this.width, this.height);
 
 
     private List<VertexArrayObject> VaoListe = new LinkedList<>();
@@ -54,10 +56,26 @@ public class Projekt extends AbstractOpenGLBase {
     }
 
 
+    public void useShader(ShaderProgram use) {
+        glUseProgram(use.getId());
+        if (use.getId() == this.shaderProgramI.getId()) {
+            isShaderProgramII = false;
+            isShaderProgramI = true;
+        }
+        if (use.getId() == this.shaderProgramII.getId()) {
+            isShaderProgramI = false;
+            isShaderProgramII = true;
+        }
+    }
+
     @Override
     protected void init() {
-        shaderProgram = new ShaderProgram("projekt");
-        glUseProgram(shaderProgram.getId());
+
+        shaderProgramI = new ShaderProgram("textureShader");
+        shaderProgramII = new ShaderProgram("phongShader");
+
+
+        useShader(shaderProgramII);
 
         Texture textureI = new Texture("texture1.png");
         Texture textureII = new Texture("texture2.jpeg", 10);
@@ -65,17 +83,17 @@ public class Projekt extends AbstractOpenGLBase {
 
 
         Mesh hex = new Mesh(Mesh.type.HEXAHEDRON, new Matrix4().rotateY(rotationAngle).rotateX(rotationAngle).translate(10, 4, -10));
-        VaoListe.add(new VertexArrayObject(hex, textureIII));
+        VaoListe.add(new VertexArrayObject(hex, textureIII, this));
 
         Mesh model = new Mesh(Mesh.type.MODEL, new Matrix4());
-        VaoListe.add(new VertexArrayObject(model, textureII));
+        VaoListe.add(new VertexArrayObject(model, textureII, this));
 
         Mesh modelII = new Mesh(Mesh.type.MODEL, "/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/spaceScooterN.obj", new Matrix4().translate(0, 0, -18));
-        VaoListe.add(new VertexArrayObject(modelII, textureI));
+        VaoListe.add(new VertexArrayObject(modelII, textureI, this));
 
-        matrixLocations[0] = glGetUniformLocation(shaderProgram.getId(), "modelMatrix");
-        matrixLocations[1] = glGetUniformLocation(shaderProgram.getId(), "matProjection");
-        matrixLocations[2] = glGetUniformLocation(shaderProgram.getId(), "viewMatrix");
+        matrixLocations[0] = glGetUniformLocation(shaderProgramI.getId(), "modelMatrix");
+        matrixLocations[1] = glGetUniformLocation(shaderProgramI.getId(), "matProjection");
+        matrixLocations[2] = glGetUniformLocation(shaderProgramI.getId(), "viewMatrix");
 
 
         glEnable(GL_DEPTH_TEST); // z-Buffer aktivieren
@@ -89,7 +107,7 @@ public class Projekt extends AbstractOpenGLBase {
     protected void ProcessInput(long window) {
         projectKeyboardInputs.ProcessInput(window, this);
         projectMouseInput.processMouseInput();
-
+        currentCamera.updateWindow(this.width, this.height);
     }
 
 
@@ -104,7 +122,7 @@ public class Projekt extends AbstractOpenGLBase {
         glUniformMatrix4fv(matrixLocations[2], false, view.getValuesAsArray());
         VaoListe.get(0).setModelMatrix(new Matrix4().rotateY(rotationAngle).translate(0, 5, -10).rotateZ(0));
         VaoListe.get(1).setModelMatrix(new Matrix4().rotateY(rotationAngle).translate(0, 1, -5).rotateZ(0));
-        this.currentCamera.onRender();
+
 
     }
 
@@ -113,14 +131,15 @@ public class Projekt extends AbstractOpenGLBase {
     protected void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+        this.currentCamera.onRender();
         // hier vorher erzeugte VAOs zeichnen
+
 
         for (int i = 0; i < VaoListe.size(); i++) {
             VertexArrayObject draw = VaoListe.get(i);
             if (draw.mesh.getType() == Mesh.type.MODEL) {
                 glUniformMatrix4fv(matrixLocations[0], false, draw.modelMatrix.getValuesAsArray());
-                if (draw.texture != null) {
+                if (draw.texture != null && glIsShader(this.shaderProgramI.getId())) {
                     glBindTexture(GL_TEXTURE_2D, draw.texture.getId());
                 }
                 glBindVertexArray(draw.loc);
@@ -128,7 +147,7 @@ public class Projekt extends AbstractOpenGLBase {
                 glDrawElements(GL_TRIANGLES, draw.mesh.getM().indicesArray.length, GL_UNSIGNED_INT, 0);
             } else {
                 glUniformMatrix4fv(matrixLocations[0], false, draw.modelMatrix.getValuesAsArray());
-                if (draw.texture != null) {
+                if (draw.texture != null && glIsShader(this.shaderProgramI.getId())) {
                     glBindTexture(GL_TEXTURE_2D, draw.texture.getId());
                 }
                 glBindVertexArray(draw.loc);

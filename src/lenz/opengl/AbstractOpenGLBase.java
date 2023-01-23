@@ -31,8 +31,8 @@ public abstract class AbstractOpenGLBase {
 
     long window;
 
-    public int width = 700;
-    public int height = 700;
+    public int width = 1080;
+    public int height = 1080;
 
     public float aspectRatio = (float) this.width / (float) this.height;
 

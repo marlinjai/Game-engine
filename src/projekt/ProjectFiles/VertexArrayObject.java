@@ -9,8 +9,7 @@ import static org.lwjgl.opengl.ARBVertexArrayObject.glGenVertexArrays;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL20.*;
 
 public class VertexArrayObject {
 
@@ -21,8 +20,11 @@ public class VertexArrayObject {
 
     public Texture texture;
 
+    private Projekt p;
 
-    public VertexArrayObject(Mesh mesh) {
+
+    public VertexArrayObject(Mesh mesh, Projekt projekt) {
+        this.p = projekt;
         this.mesh = mesh;
         this.modelMatrix = mesh.getModelMatrix();
         loc = glGenVertexArrays();
@@ -31,7 +33,8 @@ public class VertexArrayObject {
 
     }
 
-    public VertexArrayObject(Mesh mesh, Texture texture) {
+    public VertexArrayObject(Mesh mesh, Texture texture, Projekt projekt) {
+        this.p = projekt;
         this.mesh = mesh;
         this.modelMatrix = mesh.getModelMatrix();
         this.texture = texture;
@@ -63,7 +66,7 @@ public class VertexArrayObject {
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.mesh.getM().indicesArray, GL_STATIC_DRAW);
 
-            if (this.mesh.getM().textureArray != null) {
+            if (this.mesh.getM().textureArray != null && p.isShaderProgramI) {
                 int vboUV = glGenBuffers();
                 glBindBuffer(GL_ARRAY_BUFFER, vboUV);
                 glBufferData(GL_ARRAY_BUFFER, this.mesh.getM().textureArray, GL_STATIC_DRAW);
@@ -89,7 +92,7 @@ public class VertexArrayObject {
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.mesh.getIndices(), GL_STATIC_DRAW);
 
 
-            if (this.mesh.getUvCoords() != null) {
+            if (this.mesh.getUvCoords() != null & p.isShaderProgramI) {
                 int vboUV = glGenBuffers();
                 glBindBuffer(GL_ARRAY_BUFFER, vboUV);
                 glBufferData(GL_ARRAY_BUFFER, this.mesh.vec2fArrToFloatArr(this.mesh.getUvCoords()), GL_STATIC_DRAW);

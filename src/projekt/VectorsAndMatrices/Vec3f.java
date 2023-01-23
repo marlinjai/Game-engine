@@ -126,7 +126,7 @@ public class Vec3f {
     }
 
     public void Rotate(float angle, Vec3f v) {
-        Quaternion rotationQ = new Quaternion(angle,v);
+        Quaternion rotationQ = new Quaternion(-angle,v);
         Quaternion conjugateQ = rotationQ.conjugate();
         Quaternion w = conjugateQ.multiply(rotationQ.multiply(rotationQ,this),conjugateQ);
 
