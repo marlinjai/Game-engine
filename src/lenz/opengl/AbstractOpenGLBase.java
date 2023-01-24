@@ -38,7 +38,7 @@ public abstract class AbstractOpenGLBase {
 
 
     public void start(String title/*, int width, int height*/) {
-        System.out.println("LWJGL " + Version.getVersion());
+        System.out.println("S0582325 Project in  LWJGL " + Version.getVersion());
 
 
         long window = openWindow(title, width, height);

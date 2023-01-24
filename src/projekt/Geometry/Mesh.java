@@ -38,7 +38,7 @@ public class Mesh {
 
             case MODEL -> {
                 try {
-                    Model mod = new Model("/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/simpleCube.obj");
+                    Model mod = new Model("/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/cubeHomer.obj");
                     mod.processModelData(mod.facesList,mod.textures, mod.normals);
                     this.m = mod;
                     Vec4f[]modelColor = new Vec4f[mod.vertices.size()];
@@ -211,8 +211,6 @@ public class Mesh {
         }
     }
 
-
-
    /* public float[] calcNormals() {
         float[] normals = new float[this.vertices.length];
         Vec3f normale;
@@ -352,12 +350,22 @@ public class Mesh {
         UvCoords = uvCoords;
     }
 
-    public float[] vecListToFloatArr(List<Vec3f> toConvert) {
+    public float[] vec3ListToFloatArr(List<Vec3f> toConvert) {
         float[] ret = new float[toConvert.size() * 3];
         for (int i = 0; i < ret.length; i += 3) {
             ret[i] = toConvert.get(i / 3).getX();
             ret[i + 1] = toConvert.get(i / 3).getY();
             ret[i + 2] = toConvert.get(i / 3).getZ();
+        }
+        return ret;
+    }
+
+    public float[] vec2ListToFloatArr(List<Vec2f> toConvert) {
+        float[] ret = new float[toConvert.size() * 2];
+        for (int i = 0; i < ret.length; i += 2) {
+            ret[i] = toConvert.get(i / 3).getX();
+            ret[i + 1] = toConvert.get(i / 3).getY();
+
         }
         return ret;
     }

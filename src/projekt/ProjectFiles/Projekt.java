@@ -49,10 +49,7 @@ public class Projekt extends AbstractOpenGLBase {
 
 
         new Projekt().start("CG Projekt Marlin Jai"/*, width, height*/);
-        /*MyFrame x = new MyFrame();
-        float red = x.color1.getRed() / 255.0F;
-        float green = x.color1.getRed() / 255.0F;
-        float blue = x.color1.getRed() / 255.0F;*/
+
     }
 
 
@@ -75,21 +72,21 @@ public class Projekt extends AbstractOpenGLBase {
         shaderProgramII = new ShaderProgram("phongShader");
 
 
-        useShader(shaderProgramII);
+        useShader(shaderProgramI);
 
-        Texture textureI = new Texture("texture1.png");
+        Texture textureI = new Texture("stall.png");
         Texture textureII = new Texture("texture2.jpeg", 10);
         Texture textureIII = new Texture("texture3.png", 5);
 
 
-        Mesh hex = new Mesh(Mesh.type.HEXAHEDRON, new Matrix4().rotateY(rotationAngle).rotateX(rotationAngle).translate(10, 4, -10));
+        Mesh hex = new Mesh(Mesh.type.HEXAHEDRON, new Matrix4().rotateX(rotationAngle).translate(10, 4, -10));
         VaoListe.add(new VertexArrayObject(hex, textureIII, this));
 
         Mesh model = new Mesh(Mesh.type.MODEL, new Matrix4());
-        VaoListe.add(new VertexArrayObject(model, textureII, this));
+        VaoListe.add(new VertexArrayObject(model, this));
 
-        Mesh modelII = new Mesh(Mesh.type.MODEL, "/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/spaceScooterN.obj", new Matrix4().translate(0, 0, -18));
-        VaoListe.add(new VertexArrayObject(modelII, textureI, this));
+        Mesh modelII = new Mesh(Mesh.type.MODEL, "/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/spaceScooterN.obj", new Matrix4().translate(0,0,-20));
+        VaoListe.add(new VertexArrayObject(modelII,  this));
 
         matrixLocations[0] = glGetUniformLocation(shaderProgramI.getId(), "modelMatrix");
         matrixLocations[1] = glGetUniformLocation(shaderProgramI.getId(), "matProjection");
@@ -120,8 +117,8 @@ public class Projekt extends AbstractOpenGLBase {
         currentCamera.setView(currentCamera.getCMatrix());
         view = currentCamera.getView();
         glUniformMatrix4fv(matrixLocations[2], false, view.getValuesAsArray());
-        VaoListe.get(0).setModelMatrix(new Matrix4().rotateY(rotationAngle).translate(0, 5, -10).rotateZ(0));
-        VaoListe.get(1).setModelMatrix(new Matrix4().rotateY(rotationAngle).translate(0, 1, -5).rotateZ(0));
+        VaoListe.get(0).setModelMatrix(new Matrix4().rotateX(rotationAngle).translate(0, 5, -10));
+        VaoListe.get(1).setModelMatrix(new Matrix4().rotateY(rotationAngle).translate(0, 1, -5).multiply(VaoListe.get(0).modelMatrix));
 
 
     }
@@ -139,7 +136,7 @@ public class Projekt extends AbstractOpenGLBase {
             VertexArrayObject draw = VaoListe.get(i);
             if (draw.mesh.getType() == Mesh.type.MODEL) {
                 glUniformMatrix4fv(matrixLocations[0], false, draw.modelMatrix.getValuesAsArray());
-                if (draw.texture != null && glIsShader(this.shaderProgramI.getId())) {
+                if (draw.texture != null && this.isShaderProgramI) {
                     glBindTexture(GL_TEXTURE_2D, draw.texture.getId());
                 }
                 glBindVertexArray(draw.loc);
@@ -147,7 +144,7 @@ public class Projekt extends AbstractOpenGLBase {
                 glDrawElements(GL_TRIANGLES, draw.mesh.getM().indicesArray.length, GL_UNSIGNED_INT, 0);
             } else {
                 glUniformMatrix4fv(matrixLocations[0], false, draw.modelMatrix.getValuesAsArray());
-                if (draw.texture != null && glIsShader(this.shaderProgramI.getId())) {
+                if (draw.texture != null && this.isShaderProgramI) {
                     glBindTexture(GL_TEXTURE_2D, draw.texture.getId());
                 }
                 glBindVertexArray(draw.loc);
