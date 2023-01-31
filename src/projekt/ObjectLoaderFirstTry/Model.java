@@ -1,4 +1,4 @@
-package projekt.ObjectLoader;
+package projekt.ObjectLoaderFirstTry;
 
 import projekt.VectorsAndMatrices.Vec2f;
 import projekt.VectorsAndMatrices.Vec3f;

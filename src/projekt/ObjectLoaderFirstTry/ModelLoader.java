@@ -1,4 +1,4 @@
-package projekt.ObjectLoader;
+package projekt.ObjectLoaderFirstTry;
 
 import projekt.VectorsAndMatrices.Vec2f;
 import projekt.VectorsAndMatrices.Vec3f;
@@ -31,7 +31,7 @@ public class ModelLoader {
             }
             if (line.startsWith("vt ")) {
                 float u1 = Float.valueOf(line.split(" ")[1]);
-                float v1 = Float.valueOf(line.split(" ")[1]);
+                float v1 = Float.valueOf(line.split(" ")[2]);
                 Vec2f vt = new Vec2f(u1,v1);
                 m.textures.add(vt);
             }

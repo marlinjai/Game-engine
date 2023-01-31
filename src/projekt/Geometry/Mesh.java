@@ -1,8 +1,10 @@
 package projekt.Geometry;
 
 
+import projekt.optimizedLoader.ModelData;
+import projekt.optimizedLoader.OBJFileLoader;
 import projekt.Color.Color;
-import projekt.ObjectLoader.Model;
+import projekt.ObjectLoaderFirstTry.Model;
 import projekt.VectorsAndMatrices.Matrix4;
 import projekt.VectorsAndMatrices.Vec2f;
 import projekt.VectorsAndMatrices.Vec3f;
@@ -17,9 +19,11 @@ import java.util.Set;
 public class Mesh {
 
     public enum type {
-        HEXAHEDRON, OCTAHEDRON, DODECAHEDRON, ICOSAHEDRON, TETRAHEDRON, MODEL
+        HEXAHEDRON, OCTAHEDRON, DODECAHEDRON, ICOSAHEDRON, TETRAHEDRON, MODEL, MODELII
     }
     private Model m;
+
+    private ModelData md;
     private type type;
     private Matrix4 modelMatrix;
     private Vec4f[] colours;
@@ -29,27 +33,13 @@ public class Mesh {
 
     private Vec2f[] UvCoords;
 
-    private Color meshColour = new Color(new Vec4f(1, 1, 1, 1));
+    private Color meshColour = new Color(new Vec4f(0, 0, 0, 1));
 
     public Mesh(type type, Matrix4 modelMatrix) {
         this.setModelMatrix(modelMatrix);
         this.type = type;
         switch (type) {
 
-            case MODEL -> {
-                try {
-                    Model mod = new Model("/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/cubeHomer.obj");
-                    mod.processModelData(mod.facesList,mod.textures, mod.normals);
-                    this.m = mod;
-                    Vec4f[]modelColor = new Vec4f[mod.vertices.size()];
-                    Arrays.fill(modelColor,this.getMeshColour().getWHITE());
-                    this.setColours(modelColor);
-
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-            }
             case HEXAHEDRON -> {
                 Vec3f[] vertices = {
                         new Vec3f(1, 1, -1),    // 0
@@ -111,105 +101,65 @@ public class Mesh {
 
             }
             case TETRAHEDRON -> {
+                OBJFileLoader loader = new OBJFileLoader();
+                ModelData mod = loader.loadOBJ("/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/Thetraedron.obj");
+                this.md = mod;
+                Vec4f[]modelColor = new Vec4f[mod.getVertices().length];
+                Arrays.fill(modelColor,this.getMeshColour().getGREEN());
+                this.setColours(modelColor);
             }
             case OCTAHEDRON -> {
+                OBJFileLoader loader = new OBJFileLoader();
+                ModelData mod = loader.loadOBJ("/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/Octahedron.obj");
+                this.md = mod;
+                Vec4f[]modelColor = new Vec4f[mod.getVertices().length];
+                Arrays.fill(modelColor,this.getMeshColour().getGREEN());
+                this.setColours(modelColor);
             }
             case DODECAHEDRON -> {
+                OBJFileLoader loader = new OBJFileLoader();
+                ModelData mod = loader.loadOBJ("/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/Dodecahedron.obj");
+                this.md = mod;
+                Vec4f[]modelColor = new Vec4f[mod.getVertices().length];
+                Arrays.fill(modelColor,this.getMeshColour().getGREEN());
+                this.setColours(modelColor);
+
             }
             case ICOSAHEDRON -> {
+                OBJFileLoader loader = new OBJFileLoader();
+                ModelData mod = loader.loadOBJ("/Users/marlinjai/IdeaProjects/Computergrafik/src/res/Objects3D/Icosahedron.obj");
+                this.md = mod;
+                Vec4f[]modelColor = new Vec4f[mod.getVertices().length];
+                Arrays.fill(modelColor,this.getMeshColour().getGREEN());
+                this.setColours(modelColor);
             }
         }
     }
 
-    public Mesh(type type,String path, Matrix4 modelMatrix) {
+    public Mesh(type type, String path, Matrix4 modelMatrix) {
         this.setModelMatrix(modelMatrix);
         this.type = type;
-        switch (type) {
 
-            case MODEL -> {
-                try {
-                    Model mod = new Model(path);
-                    mod.processModelData(mod.facesList,mod.textures, mod.normals);
-                    this.m = mod;
-                    Vec4f[]modelColor = new Vec4f[mod.vertices.size()];
-                    Arrays.fill(modelColor,this.getMeshColour().getWHITE());
-                    this.setColours(modelColor);
+               /*  Model mod = new Model(path);
+                  mod.processModelData(mod.facesList,mod.textures, mod.normals);
+                  this.m = mod;
+                  Vec4f[]modelColor = new Vec4f[mod.vertices.size()];
+                  Arrays.fill(modelColor,this.getMeshColour().getWHITE());
+                  this.setColours(modelColor);*/ // Old model loader
 
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-            }
-            case HEXAHEDRON -> {
-                Vec3f[] vertices = {
-                        new Vec3f(1, 1, -1),    // 0
-                        new Vec3f(-1, 1, -1),   // 1
-                        new Vec3f(-1, -1, -1),  // 2
-                        new Vec3f(1, -1, -1),   // 3
-                        new Vec3f(1, 1, 1),     // 4
-                        new Vec3f(-1, 1, 1),    // 5
-                        new Vec3f(-1, -1, 1),   // 6
-                        new Vec3f(1, -1, 1)     // 7
-                };
-                this.setVertices(vertices);
-
-                Vec4f[] colours = {
-                        this.getMeshColour().getWHITE(),
-                        this.getMeshColour().getWHITE(),
-                        this.getMeshColour().getWHITE(),
-                        this.getMeshColour().getWHITE(),
-
-                        this.getMeshColour().getWHITE(),
-                        this.getMeshColour().getWHITE(),
-                        this.getMeshColour().getWHITE(),
-                        this.getMeshColour().getWHITE(),
-                };
-                this.setColours(colours);
-                int[] indices = {
-
-                        4, 5, 7,
-                        5, 6, 7,
-                        4, 7, 0,
-                        7, 3, 0,
-                        1, 6, 5,
-                        1, 2, 6,
-                        2, 1, 0,
-                        0, 3, 2,
-                        3, 6, 2,
-                        6, 3, 7,
-                        0, 1, 5,
-                        0, 5, 4
-
-                };
-                this.setIndices(indices);
-                this.normals = this.calcNormalsVec();
-
-                Vec2f[] uvs = {
-
-                        new Vec2f(0f, 0f),
-                        new Vec2f(1f, 0f),
-                        new Vec2f(1f, 1f),
-                        new Vec2f(0f, 1f),
-
-                        new Vec2f(1f, 0f),
-                        new Vec2f(0f, 0f),
-                        new Vec2f(0f, 1f),
-                        new Vec2f(1f, 1f),
-
-                };
-                this.setUvCoords(uvs);
-
-            }
-            case TETRAHEDRON -> {
-            }
-            case OCTAHEDRON -> {
-            }
-            case DODECAHEDRON -> {
-            }
-            case ICOSAHEDRON -> {
-            }
-        }
+        OBJFileLoader loader = new OBJFileLoader();
+        ModelData mod = loader.loadOBJ(path);
+        this.md = mod;
+        Vec4f[]modelColor = new Vec4f[mod.getVertices().length];
+        Arrays.fill(modelColor,this.getMeshColour().getWHITE());
+        this.setColours(modelColor);
     }
+
+    public ModelData getMd() {
+        return md;
+    }
+
+
 
    /* public float[] calcNormals() {
         float[] normals = new float[this.vertices.length];

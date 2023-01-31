@@ -54,9 +54,9 @@ public class VertexArrayObject {
 
     public void vbo() {
 
-        if (this.mesh.getType() == Mesh.type.MODEL) {
+        if (this.mesh.getType() == Mesh.type.MODEL || this.mesh.getType() == Mesh.type.TETRAHEDRON || this.mesh.getType() == Mesh.type.OCTAHEDRON|| this.mesh.getType() == Mesh.type.DODECAHEDRON|| this.mesh.getType() == Mesh.type.ICOSAHEDRON) {
 
-            int vboCoords = glGenBuffers();
+           /* int vboCoords = glGenBuffers();
             glBindBuffer(GL_ARRAY_BUFFER, vboCoords);
             glBufferData(GL_ARRAY_BUFFER, this.mesh.getM().vertexArray, GL_STATIC_DRAW);
             glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
@@ -76,6 +76,29 @@ public class VertexArrayObject {
             int vboNormals = glGenBuffers();
             glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
             glBufferData(GL_ARRAY_BUFFER, this.mesh.getM().normalsArray, GL_STATIC_DRAW);
+            glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+            glEnableVertexAttribArray(2);*/
+
+            int vboCoords = glGenBuffers();
+            glBindBuffer(GL_ARRAY_BUFFER, vboCoords);
+            glBufferData(GL_ARRAY_BUFFER, this.mesh.getMd().getVertices(), GL_STATIC_DRAW);
+            glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+            glEnableVertexAttribArray(0);
+
+            int vboIndices = glGenBuffers();
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.mesh.getMd().getIndices(), GL_STATIC_DRAW);
+
+            if (this.mesh.getMd().getTextureCoords() != null && p.isShaderProgramI) {
+                int vboUV = glGenBuffers();
+                glBindBuffer(GL_ARRAY_BUFFER, vboUV);
+                glBufferData(GL_ARRAY_BUFFER, this.mesh.getMd().getTextureCoords(), GL_STATIC_DRAW);
+                glVertexAttribPointer(3, 2, GL_FLOAT, false, 0, 0);
+                glEnableVertexAttribArray(3);
+            }
+            int vboNormals = glGenBuffers();
+            glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
+            glBufferData(GL_ARRAY_BUFFER, this.mesh.getMd().getNormals(), GL_STATIC_DRAW);
             glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
             glEnableVertexAttribArray(2);
 
